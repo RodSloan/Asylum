@@ -6,7 +6,8 @@ public class TextController : MonoBehaviour {
 
 	public Text text;
 	private enum States {
-		cell_start, cell, corridor1, corridor2, corridor3, corridor4, doorlock, cockpit, tag, help, credits 
+		cell_start, cell, corridor1, corridor2, corridor3, corridor4, doorlock, cockpit, tag, 
+		ghostCell1, ghostCell2, empty, help, credits 
 	};
 	private States myState;
 	private States SaveState;
@@ -42,6 +43,10 @@ public class TextController : MonoBehaviour {
 			case States.corridor4:		corridor4();		break;
 			case States.doorlock:		doorlock();		break;
 			case States.cockpit:		cockpit();		break;
+			case States.tag:		tag();			break;
+			case States.empty:		empty();		break;
+			case States.ghostCell1		ghostCell1();		break;
+			case States.ghostCell2		ghostCell2();		break;
 			case States.help:		help();			break;
 			case States.credits:		credits();		break;
 			default:
@@ -353,6 +358,60 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 6) {
 			SaveState = States.tag;
+			myState = States.help;
+		}
+	}
+	
+	void ghostCell1 () {
+		if (!flg_ghostCell1_visited && flg_ghosting) {
+			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
+				"bathed in ghostly grey flames, lying on a cot. The figure seems unaffected by the " +
+				"flames, which cast no light.";	
+		} else if (!flg_ghostCell1_visited && !flg_ghosting) {
+			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
+				"lying on a cot.";
+		} else if (flg_ghostCell1_visited && flg_ghosting) {
+			text.text = "Through the view slit of the locked security door you see a lifeless figure bathed in " +
+				"gray flames and lying on a cot.";
+		} else if (flg_ghostCell1_visited && !flg_ghosting) {
+			text.text = "Through the view slit of the locked security door you see a lifeless figure lying on a " +
+				"cot.";
+		}
+		
+		if(key_controller() == 6) {
+			SaveState = States.ghostCell1;
+			myState = States.help;
+		}
+	}
+	
+	void ghostCell2 () {
+		if (!flg_ghostCell2_visited && flg_ghosting) {
+			text.text = "The security door is locked, but through a narrow viewport you see a lifeless figure " +
+				"bathed in ghostly grey flames, lying in a heap on the floor. The figure seems " +
+				"unaffected by the flames, which cast no light.";	
+		} else if (!flg_ghostCell2_visited && !flg_ghosting) {
+			text.text = "The security door is locked, but through a narrow viewport you can barely " +
+				"see a lifeless figure lying in a heap on the floor.";
+		} else if (flg_ghostCell2_visited && flg_ghosting) {
+			text.text = "Through the view slit of the locked security door you see a lifeless figure bathed in " +
+				"grey flames, lying in a heap on the floor.";
+		} else if (flg_ghostCell2_visited && !flg_ghosting) {
+			text.text = "Through the view slit of the locked security door you see a lifeless figure lying in a " +
+				"heap on the floor.";
+		}
+		
+		if(key_controller() == 6) {
+			SaveState = States.ghostCell2;
+			myState = States.help;
+		}
+	}
+	
+	void empty() {
+		text.text = "You walk through the open security door into an unlit, hollow cell. Your " +
+			"only option is to go back out through the door to the EAST.";
+			
+		if(key_controller() == 6) {
+			SaveState = States.empty;
 			myState = States.help;
 		}
 	}
