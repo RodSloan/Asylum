@@ -32,9 +32,12 @@ public class TextController : MonoBehaviour {
 	private bool flg_corr4_visited = false;
 	private bool flg_doorlock_visited = false;
 	private bool flg_TAG_visited = false;
+	private bool flg_Cipher_visited = false;
+	private bool flg_Cipher_recruited = false;
+	private bool flg_lock_plans = false; 
 	private bool flg_Solar_recruited = false; //Solar is an NPC, recruit him to blow the door
 	private bool flg_extinguisher = false;
-	private bool flg_trueLove = false; //Set when you discover TAGs love for Cipher
+	private bool flg_trueLove = false; 	//Set when you discover TAGs love for Cipher
 
 	// Use this for initialization
 	void Start () {
@@ -367,7 +370,7 @@ public class TextController : MonoBehaviour {
 		} else if (!flg_ghosting) {
 			text.text = "The security door is locked, and the room beyond is too dark to see " +
 				"anything through the view port.";
-		}
+		} 
 		
 		if(key_controller() == 6) {
 			SaveState = States.tag;
@@ -411,6 +414,64 @@ public class TextController : MonoBehaviour {
 	}
 	
 	void cipher() {
+		//This layout makes provision for imaging
+		if (flg_ghosting && !flg_Cipher_recruited) {
+			if (!flg_cipher_visited) {
+				text.text = "You heave against the door, but, surprisingly, your hands pass right through, and " +
+					"with the momentum of you push, the rest of you follows, into the white lit room." +
+					"\n\tThe man doesn’t seem to notice your entrance, and even talking to him " +
+					"doesn’t stir him from his thoughts. You try tapping him on the shoulder, your hand " +
+					"passing unharmed through the halo of blue flame, but that also doesn’t work. " +
+					"\n\tEventually, you give up and look around the room. The books cover many " +
+					"subjects, from nuclear physics to medicine, to politics and deep-space flight systems." +
+					"Besides the books on the desk, there are a number of designs, including an " +
+					"exploded view of the security door’s locking mechanism. Turning to look at the door, " +
+					"you see that the lock appears to have been polished. A number of handmade tools " +
+					"rest atop a stack of books near the door." +
+					"\t\nWith no way to rouse the man, there’s nothing else to do but to head EAST, " +
+					"back into the corridor.";
+					
+					flg_lock_plans = true;
+			} else if (flg_cipher_visited) {
+				text.text = "";
+			}
+		} else if (!flg_ghosting && !flg_Cipher_recruited) {
+			if (!flg_cipher_visited) {
+				text.text = "You bang loudly on the door, and the man jumps with a start. He peers at you, as if " +
+					"you are the most alien being in the world, while slowly drawing closer to the " +
+					"viewport." +
+					"\n\t‘It can’t be.’ He says, ‘Ha! You’re alive. A ghost returned! Fitting, really. It IS " +
+					"so good to see you again.”" +
+					"\n\tYou tell the man — who calls himself Cipher — that you can help him " +
+					"escape, but he only shakes his head sadly." +
+					"\n\t‘No, the things they’d do if I left this cell. No. I made a promise.’ " +
+					"\n\tYou try to convince Cipher, but he’s unreasonably obstinate. " +
+					"\n\tFrustrated, you decide to head back into the corridor to the EAST to clear your head.";
+			} else if (flg_cipher_visited) {
+				text.text = "You knock on the door again and the man approaches the viewport. "; 
+			} else if (flg_lock_plans && flg_TrueLove) {
+				text.text = "You knock on the door and Cipher answers." +
+					"\n\t‘Ghost, is there something I can do for you?’ " +
+					"\n\t‘Those plans in your room, I want you to open that lock Cipher!’" +
+					"\n\t‘Did you forget? I made a promise. I’m not going anywhere…’" +
+					"\n\t‘Because of Taggy?’" +
+					"\n\t‘That… yes.’" +
+					"\n\t‘She loved you, you know. The last thing she wrote about was her love for you, she " +
+					"put it down in a letter to you.’" +
+					"\n\tThe revelation brings a sea change on the man, who looks into your eyes, searching " +
+					"to know the truth of what you say. Then he disappears behind the door. Not two " +
+					"seconds later the cell door slides open, and Cipher stands before you.";
+			} else if (flg_lock_plans && flg_cipher_visited) { //assuming you have to visit him before
+				text.text = "You knock on the door and Cipher answers." +
+					"‘Ghost, how can I help you?’ " +
+					"‘What about those plans in your room. You know how to get through that lock!’" +
+					"‘Yes, but I already told you, I’m not leaving.’";
+			} 
+		} else if (flg_Cipher_recruited) {
+			text.text = "Cipher stands before you, his room open." +
+				"‘Just let me know if I can help?’";
+		}
+		
 		if(key_controller() == 6) {
 			SaveState = States.cipher;
 			myState = States.help;
