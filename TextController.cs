@@ -2,11 +2,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+/**
+* Game by Rodney Sloan
+* Based off a Unity tutorial on Udemy
+* License: 
+*	This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+*	Find out more at http://creativecommons.org/licenses/by-sa/4.0/
+**/
+
 public class TextController : MonoBehaviour {
+	
+	//TODO: rooms would make great classes, then we could inherit things like movement and help
 
 	public Text text;
 	private enum States {
-		cell_start, cell, corridor1, corridor2, corridor3, corridor4, doorlock, cockpit, tag, 
+		cell_start, cell, corridor1, corridor2, corridor3, corridor4, doorlock, cockpit, 
+		tag, cipherDoor, cipher, 
 		ghostCell1, ghostCell2, empty, help, credits 
 	};
 	private States myState;
@@ -44,6 +55,8 @@ public class TextController : MonoBehaviour {
 			case States.doorlock:		doorlock();		break;
 			case States.cockpit:		cockpit();		break;
 			case States.tag:		tag();			break;
+			case States.cipherDoor:		cipherDoor();		break;
+			case States.cipher:		cipher();		break;
 			case States.empty:		empty();		break;
 			case States.ghostCell1		ghostCell1();		break;
 			case States.ghostCell2		ghostCell2();		break;
@@ -358,6 +371,48 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 6) {
 			SaveState = States.tag;
+			myState = States.help;
+		}
+	}
+	
+	void cipherDoor() {
+		if (!flg_cipher_visited && flg_ghosting) {
+			text.text = "Looking through the viewport, you see violent blue flames twisting around an old " +
+				"man sitting on the edge of his cot, apparently deep in thought despite the " +
+				"conflagration. Surrounding him and stacked up against the walls are piles of thick " +
+				"books. At the foot of his desk, also covered with books, is a small, rotating " +
+				"contraption. A cable runs from the device up into the ceiling, where it connects " +
+				"with the cell’s lumostrips." +
+				"\n\tPress SPACE to push on the door.";
+		} else if (!flg_cipher_visited && !flg_ghosting) {
+			text.text = "Looking through the viewport, you see an old man sitting on the edge of his cot, " +
+				"apparently deep in thought. Surrounding him and stacked up against the walls are " +
+				"piles of thick books. At the foot of his desk, also covered with books, is a small, " +
+				"rotating contraption. A cable runs from the device up into the ceiling, where it " +
+				"connects with the cells lumostrips." +
+				"\n\tPress SPACE to try banging on the door.";
+		} else if (flg_cipher_visited && flg_ghosting) {
+			text.text = "Looking through the view port you see an old man, bathed in blue flames, deep in " +
+				"thought. " +
+				"\n\tPress SPACE to push on the door.";
+		} else if () {
+			text.text = "Looking through the view port you see an old man, sitting on his cot, deep in " +
+				"thought. " +
+				"\n\tPress SPACE to try banging on the door.";
+		}
+		
+		//TODO: wrap in logic
+		if(key_controller() == 5) {
+			
+		} else if(key_controller() == 6) {
+			SaveState = States.cipherDoor;
+			myState = States.help;
+		}
+	}
+	
+	void cipher() {
+		if(key_controller() == 6) {
+			SaveState = States.cipher;
 			myState = States.help;
 		}
 	}
