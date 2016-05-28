@@ -19,8 +19,7 @@ public class TextController : MonoBehaviour {
 	public Text text;
 	private enum States {
 		cell_start, cell, corridor1, corridor2, corridor3, corridor4, doorlock, cockpit, 
-		tag, cipherDoor, cipher, 
-		ghostCell1, ghostCell2, empty, help, credits 
+		tag, cipherDoor, cipher, solar, fury, ghostCell1, ghostCell2, empty, help, credits 
 	};
 	private States myState;
 	private States SaveState;
@@ -62,6 +61,8 @@ public class TextController : MonoBehaviour {
 		case States.doorlock:		doorlock();		break;
 		case States.cockpit:		cockpit();		break;
 		case States.tag:			TAG();			break;
+		case States.solar:		solar();		break;
+		case States.fury:		fury();			break;
 		case States.cipherDoor:		cipherDoor();		break;
 		case States.cipher:			cipher();		break;
 		case States.empty:			empty();		break;
@@ -79,6 +80,28 @@ public class TextController : MonoBehaviour {
 		} else if (myState == States.corridor1) {
 			corridor1();
 		}*/
+	}
+	
+	void resetGame() {
+		// Reset all values.
+		flg_ghosting = true, flg_first_unghosting = false;
+		flg_cell_visited = false;
+		flg_corr1_visited = false;
+		flg_corr2_visited = false;
+		//flg_corr3_visited = false;
+		flg_corr4_visited = false;
+	 	flg_doorlock_visited = false;
+	 	flg_ghostCell1_visited = false;
+	 	flg_ghostCell2_visited = false;
+	 	flg_TAG_visited = false;
+	 	flg_Cipher_visited = false;
+		flg_Cipher_recruited = false;
+		flg_lock_plans = false; 
+		flg_Solar_recruited = false; 
+		flg_extinguisher = false;
+		flg_trueLove = false; 
+		
+		myState = States.cell_start;
 	}
 	
 	void cell_start () {
@@ -393,6 +416,31 @@ public class TextController : MonoBehaviour {
 		}
 	}
 	
+	void solar() {
+		
+		text.text = "You've recruited Solar [More game content coming].";
+		
+		if(key_controller() == 1) {
+			flg_Solar_recruited = true;
+			SaveState = States.corridor3;
+		} else if(key_controller() == 6) {
+			SaveState = States.solar;
+			myState = States.help;
+		}
+	}
+	
+	void fury() {
+		
+		text.text = "This door seems the most impenetrable of all. [More game content coming].";
+		
+		if(key_controller() == 4) {
+			SaveState = States.corridor3;
+		} else if(key_controller() == 6) {
+			SaveState = States.fury;
+			myState = States.help;
+		}
+	}
+	
 	void cipherDoor() {
 		if (!flg_Cipher_visited && flg_ghosting) {
 			text.text = "Looking through the viewport, you see violent blue flames twisting around an old " +
@@ -569,9 +617,14 @@ public class TextController : MonoBehaviour {
 				"\nD or Right Arrow: Move East." +
 				"\nSPACE Key: Interact with an object or character." +
 				"\nH: This help menu." +
+				"\nR: Reset the game. Only available from this screen." +
+				"\n\nGAMEPAD: You can use your gamepad to move around. Press a putton on your " +
+				"\t\tgamepad to activate it." +
 				"\n\nPress H to return.";
 		if(key_controller() == 6)
 			myState = SaveState;
+		else if(key_controller() == 7)
+			resetGame();
 	}
 	
 	void credits () {
@@ -584,7 +637,7 @@ public class TextController : MonoBehaviour {
 				"\n\nThanks for playing..." +
 				"\n\nPress SPACE to replay.";
 		if(key_controller() == 5) {
-			myState = States.cell_start; //change to see credits
+			resetGame();
 		} else if(key_controller() == 6) {
 			SaveState = States.credits;
 			myState = States.help;
@@ -613,6 +666,8 @@ public class TextController : MonoBehaviour {
 			return 5;
 		} else if (Input.GetKeyDown(KeyCode.H)) { //H key for Help
 			return 6;
+		} else if (Input.GetKeyDown(KeyCode.R)) { //R key for Resetting the game from the Help Screen
+			return 7;
 		} 
 		else 
 			return 0;
