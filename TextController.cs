@@ -8,6 +8,8 @@ using System.Collections;
 * License: 
 *	This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
 *	Find out more at http://creativecommons.org/licenses/by-sa/4.0/
+*
+* TODO: http://answers.unity3d.com/questions/660994/is-there-a-tutorial-to-use-usb-controllers-in-unit.html
 **/
 
 public class TextController : MonoBehaviour {
@@ -166,12 +168,13 @@ public class TextController : MonoBehaviour {
 		}
 		
 		if(key_controller() == 1) {
-			//myState = States.corridor1;
+			flg_corr1_visited = true; //We have visited and are leaving, set to true
+			myState = States.ghostCell1;
 		} else if(key_controller() == 2) {
-			flg_corr1_visited = true; //Once we visit it is always true, no need to check.
+			flg_corr1_visited = true;
 			myState = States.corridor2;
 		} else if(key_controller() == 4) {
-			flg_corr1_visited = false; //Once we visit it is always true.
+			flg_corr1_visited = true;
 			myState = States.cell; //This changes to turn human
 		} else if(key_controller() == 6) {
 			SaveState = States.corridor1;
@@ -209,7 +212,7 @@ public class TextController : MonoBehaviour {
 	}
 	
 	void corridor3 () {
-		if ((!flg_ghosting) && (!flg_extinguisher)) {
+		if (!flg_ghosting && !flg_extinguisher) {
 			text.text = "A dull emergency beacon flashes feebly, running on the last of its power. The sickly " +
 				"orange glow illuminates a thick blast door to the EAST. To either side of the blast " +
 					"door are two large, dry type FIRE EXTINGUISHERS. Another security door, reinforced " +
@@ -238,6 +241,13 @@ public class TextController : MonoBehaviour {
 			myState = States.corridor4;
 		} else if(key_controller() == 3) {
 			myState = States.corridor2;
+		} else if(key_controller() == 5) {
+			if (!flg_ghosting && !flg_extinguisher) {
+				//Take the extinguisher
+				flg_extinguisher = true;
+				//TODO: Add in a message so it has been taken.
+				myState = States.corridor3;
+			}
 		} else if(key_controller() == 6) {
 			SaveState = States.corridor3;
 			myState = States.help;
@@ -259,13 +269,13 @@ public class TextController : MonoBehaviour {
 		}
 		
 		if(key_controller() == 1) {
-			//myState = States.corridor1;
+			myState = States.cipherDoor;
 		} else if(key_controller() == 2) {
 			myState = States.doorlock;
 		} else if(key_controller() == 3) {
 			myState = States.corridor3;
 		} else if(key_controller() == 4) {
-			//myState = States.corridor2;
+			myState = States.ghostRoom2;
 		} else if(key_controller() == 6) {
 			SaveState = States.corridor4;
 			myState = States.help;
@@ -374,7 +384,10 @@ public class TextController : MonoBehaviour {
 				"anything through the view port.";
 		} 
 		
-		if(key_controller() == 6) {
+		if(key_controller() == 1) {
+			flg_TAG_visited = true;
+			SaveState = States.corridor2;
+		} else if(key_controller() == 6) {
 			SaveState = States.tag;
 			myState = States.help;
 		}
@@ -406,9 +419,12 @@ public class TextController : MonoBehaviour {
 					"\n\tPress SPACE to try banging on the door.";
 		}
 		
-		//TODO: wrap in logic
-		if(key_controller() == 5) {
-			
+		if (key_controller() == 4) {
+			flg_Cipher_visited = true;
+			SaveState = States.corridor4;
+		} else if(key_controller() == 5) {
+			//TODO: wrap in logic //REALLY??? Doesn't this go to States.cipher regardless?
+			SaveState = States.cipher;
 		} else if(key_controller() == 6) {
 			SaveState = States.cipherDoor;
 			myState = States.help;
@@ -474,7 +490,10 @@ public class TextController : MonoBehaviour {
 				"‘Just let me know if I can help?’";
 		}
 		
-		if(key_controller() == 6) {
+		if (key_controller() == 4) {
+			flg_Cipher_visited = true;
+			SaveState = States.corridor4;
+		} else if (key_controller() == 6) {
 			SaveState = States.cipher;
 			myState = States.help;
 		}
@@ -484,7 +503,7 @@ public class TextController : MonoBehaviour {
 		if (!flg_ghostCell1_visited && flg_ghosting) {
 			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
 				"bathed in ghostly grey flames, lying on a cot. The figure seems unaffected by the " +
-					"flames, which cast no light.";	
+				"flames, which cast no light.";	
 		} else if (!flg_ghostCell1_visited && !flg_ghosting) {
 			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
 				"lying on a cot.";
@@ -496,7 +515,10 @@ public class TextController : MonoBehaviour {
 				"cot.";
 		}
 		
-		if(key_controller() == 6) {
+		if(key_controller() == 4) {
+			flg_ghostCell1_visited = true;
+			SaveState = States.corridor1;
+		} else if(key_controller() == 6) {
 			SaveState = States.ghostCell1;
 			myState = States.help;
 		}
@@ -518,7 +540,10 @@ public class TextController : MonoBehaviour {
 				"heap on the floor.";
 		}
 		
-		if(key_controller() == 6) {
+		if(key_controller() == 1) {
+			flg_ghostCell2_visited = true;
+			SaveState = States.corridor4;
+		} else if(key_controller() == 6) {
 			SaveState = States.ghostCell2;
 			myState = States.help;
 		}
@@ -528,7 +553,9 @@ public class TextController : MonoBehaviour {
 		text.text = "You walk through the open security door into an unlit, hollow cell. Your " +
 			"only option is to go back out through the door to the EAST.";
 		
-		if(key_controller() == 6) {
+		if(key_controller() == 4) {
+			SaveState = States.corridor2;
+		} else if(key_controller() == 6) {
 			SaveState = States.empty;
 			myState = States.help;
 		}
