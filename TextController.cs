@@ -597,13 +597,17 @@ public class TextController : MonoBehaviour {
 	 */	
 	int key_controller () {
 		
-		if((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow))) {
+		if((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow)) 
+			|| (Input.GetAxis("Horizontal") < 0)) {
 			return 1;
-		} else if((Input.GetKeyDown(KeyCode.W)) || (Input.GetKeyDown(KeyCode.UpArrow))) {
+		} else if((Input.GetKeyDown(KeyCode.W)) || (Input.GetKeyDown(KeyCode.UpArrow))
+			|| (Input.GetAxis("Vertical") < 0)) {
 			return 2;
-		} else if((Input.GetKeyDown(KeyCode.S)) || (Input.GetKeyDown(KeyCode.DownArrow))) {
+		} else if((Input.GetKeyDown(KeyCode.S)) || (Input.GetKeyDown(KeyCode.DownArrow))
+			|| (Input.GetAxis("Vertical") > 0)) {
 			return 3;
-		} else if((Input.GetKeyDown(KeyCode.D)) || (Input.GetKeyDown(KeyCode.RightArrow))) {
+		} else if((Input.GetKeyDown(KeyCode.D)) || (Input.GetKeyDown(KeyCode.RightArrow)) 
+			|| (Input.GetAxis("Horizontal") > 0)) {
 			return 4;
 		} else if (Input.GetKeyDown(KeyCode.Space)) {
 			return 5;
