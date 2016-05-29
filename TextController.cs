@@ -24,6 +24,9 @@ public class TextController : MonoBehaviour {
 	private States myState;
 	private States SaveState;
 	
+	// Timers
+	private int tmr_gamePad = 0;
+	
 	// Flags, prefix flg_
 	private bool flg_ghosting = true, flg_first_unghosting = false;
 	private bool flg_cell_visited = false;
@@ -50,7 +53,12 @@ public class TextController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print (myState);
+	
+		// Update timers
+		tmr_gamePad--;
+		print (tmr_gamePad);
+	
+		//print (myState);
 		switch(myState) {
 		case States.cell_start: 	cell_start();		break;
 		case States.cell: 			cell();		 	break;
@@ -84,17 +92,18 @@ public class TextController : MonoBehaviour {
 	
 	void resetGame() {
 		// Reset all values.
-		flg_ghosting = true, flg_first_unghosting = false;
+		flg_ghosting = true;
+		flg_first_unghosting = false;
 		flg_cell_visited = false;
 		flg_corr1_visited = false;
 		flg_corr2_visited = false;
 		//flg_corr3_visited = false;
 		flg_corr4_visited = false;
-	 	flg_doorlock_visited = false;
-	 	flg_ghostCell1_visited = false;
-	 	flg_ghostCell2_visited = false;
-	 	flg_TAG_visited = false;
-	 	flg_Cipher_visited = false;
+		flg_doorlock_visited = false;
+		flg_ghostCell1_visited = false;
+		flg_ghostCell2_visited = false;
+		flg_TAG_visited = false;
+		flg_Cipher_visited = false;
 		flg_Cipher_recruited = false;
 		flg_lock_plans = false; 
 		flg_Solar_recruited = false; 
@@ -298,7 +307,7 @@ public class TextController : MonoBehaviour {
 		} else if(key_controller() == 3) {
 			myState = States.corridor3;
 		} else if(key_controller() == 4) {
-			myState = States.ghostRoom2;
+			myState = States.ghostCell2;
 		} else if(key_controller() == 6) {
 			SaveState = States.corridor4;
 			myState = States.help;
@@ -323,18 +332,18 @@ public class TextController : MonoBehaviour {
 		} else if ((flg_doorlock_visited) && (flg_ghosting)) {
 			text.text = "You approach the door cautiously, but the static energy emanating from it " +
 				"grows more and more intense, making your head hurt and your vision blur. You " +
-				"back away.";
+					"back away.";
 		} else if ((flg_doorlock_visited) && (!flg_ghosting)) {
 			text.text = "The door remains locked.";		
 		} else if ((!flg_ghosting) && (flg_Solar_recruited)) {
 			text.text = "As you near the airlock, Solar walks past you, stepping up to the door and presses " +
 				"his palms against it. His hands begin to glow a soft red, then intensify to orange, " +
-				"then yellow, then white, filling the corridor with intensely bright light." +
-				"\n\tAs your eyes struggle to adjust, you see the metal of the airlock glowing red. " +
-				"Melting, collapsing, burning. " +
-				"\n\tThen the light dies and Solar steps back, his face lit by the glowing orange " +
-				"slag pile at his feet as he turns to you." +
-				"\n\t“Ladies first.”";
+					"then yellow, then white, filling the corridor with intensely bright light." +
+					"\n\tAs your eyes struggle to adjust, you see the metal of the airlock glowing red. " +
+					"Melting, collapsing, burning. " +
+					"\n\tThen the light dies and Solar steps back, his face lit by the glowing orange " +
+					"slag pile at his feet as he turns to you." +
+					"\n\t“Ladies first.”";
 		} else if ((flg_ghosting) && (flg_Solar_recruited)) {
 			text.text = "You try to get closer to the door, but whatever hit you before is still " +
 				"cackling with unseen power. You dare not go any nearer.";
@@ -354,11 +363,11 @@ public class TextController : MonoBehaviour {
 		if (!flg_ghosting) { 
 			text.text = "You step through the flaming slag and gaping hole that remains of the " +
 				"airlock, and onto the ships command deck. Beyond the semicircle of derelict " +
-				"navports and lifeless comm arrays, the ships view port is filled with the soft orange " +
-				"glow of a nearby planet’s dust belt. " +
-				"\n\tAs you step forward, you brush against a flight seat, disturbing some " +
-				"unseen weight resting within the chair. You turn to stop the thing falling, coming " +
-				"face to face with the death grin of a rotting corpse in a captain’s flight suit. " +
+					"navports and lifeless comm arrays, the ships view port is filled with the soft orange " +
+					"glow of a nearby planet’s dust belt. " +
+					"\n\tAs you step forward, you brush against a flight seat, disturbing some " +
+					"unseen weight resting within the chair. You turn to stop the thing falling, coming " +
+					"face to face with the death grin of a rotting corpse in a captain’s flight suit. " +
 					"\n\tMost of the crew seats are empty, but here and there other corpses rest, " +
 					"blanketed under a thick layer of dust. " +
 					"\n\tHow long has the ship been adrift in space, and how much longer will it " +
@@ -409,7 +418,7 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 1) {
 			flg_TAG_visited = true;
-			SaveState = States.corridor2;
+			myState = States.corridor2;
 		} else if(key_controller() == 6) {
 			SaveState = States.tag;
 			myState = States.help;
@@ -422,7 +431,7 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 1) {
 			flg_Solar_recruited = true;
-			SaveState = States.corridor3;
+			myState = States.corridor3;
 		} else if(key_controller() == 6) {
 			SaveState = States.solar;
 			myState = States.help;
@@ -434,7 +443,7 @@ public class TextController : MonoBehaviour {
 		text.text = "This door seems the most impenetrable of all. [More game content coming].";
 		
 		if(key_controller() == 4) {
-			SaveState = States.corridor3;
+			myState = States.corridor3;
 		} else if(key_controller() == 6) {
 			SaveState = States.fury;
 			myState = States.help;
@@ -469,10 +478,10 @@ public class TextController : MonoBehaviour {
 		
 		if (key_controller() == 4) {
 			flg_Cipher_visited = true;
-			SaveState = States.corridor4;
+			myState = States.corridor4;
 		} else if(key_controller() == 5) {
 			//TODO: wrap in logic //REALLY??? Doesn't this go to States.cipher regardless?
-			SaveState = States.cipher;
+			myState = States.cipher;
 		} else if(key_controller() == 6) {
 			SaveState = States.cipherDoor;
 			myState = States.help;
@@ -540,7 +549,7 @@ public class TextController : MonoBehaviour {
 		
 		if (key_controller() == 4) {
 			flg_Cipher_visited = true;
-			SaveState = States.corridor4;
+			myState = States.corridor4;
 		} else if (key_controller() == 6) {
 			SaveState = States.cipher;
 			myState = States.help;
@@ -551,7 +560,7 @@ public class TextController : MonoBehaviour {
 		if (!flg_ghostCell1_visited && flg_ghosting) {
 			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
 				"bathed in ghostly grey flames, lying on a cot. The figure seems unaffected by the " +
-				"flames, which cast no light.";	
+					"flames, which cast no light.";	
 		} else if (!flg_ghostCell1_visited && !flg_ghosting) {
 			text.text = "The security door is locked, but through a narrow view port you see a lifeless figure " +
 				"lying on a cot.";
@@ -565,7 +574,7 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 4) {
 			flg_ghostCell1_visited = true;
-			SaveState = States.corridor1;
+			myState = States.corridor1;
 		} else if(key_controller() == 6) {
 			SaveState = States.ghostCell1;
 			myState = States.help;
@@ -590,7 +599,7 @@ public class TextController : MonoBehaviour {
 		
 		if(key_controller() == 1) {
 			flg_ghostCell2_visited = true;
-			SaveState = States.corridor4;
+			myState = States.corridor4;
 		} else if(key_controller() == 6) {
 			SaveState = States.ghostCell2;
 			myState = States.help;
@@ -602,7 +611,7 @@ public class TextController : MonoBehaviour {
 			"only option is to go back out through the door to the EAST.";
 		
 		if(key_controller() == 4) {
-			SaveState = States.corridor2;
+			myState = States.corridor2;
 		} else if(key_controller() == 6) {
 			SaveState = States.empty;
 			myState = States.help;
@@ -649,18 +658,21 @@ public class TextController : MonoBehaviour {
 	 * TODO: map in buttons on a game pad
 	 */	
 	int key_controller () {
-		
 		if((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow)) 
-			|| (Input.GetAxis("Horizontal") < 0)) {
+		   		  || ((Input.GetAxis("Horizontal") == -1) && (tmr_gamePad <= 0))) {
+			tmr_gamePad = 100;
 			return 1;
 		} else if((Input.GetKeyDown(KeyCode.W)) || (Input.GetKeyDown(KeyCode.UpArrow))
-			|| (Input.GetAxis("Vertical") < 0)) {
+		          || ((Input.GetAxis("Vertical") == 1) && (tmr_gamePad <= 0))) {
+			tmr_gamePad = 100;
 			return 2;
 		} else if((Input.GetKeyDown(KeyCode.S)) || (Input.GetKeyDown(KeyCode.DownArrow))
-			|| (Input.GetAxis("Vertical") > 0)) {
+		         || ((Input.GetAxis("Vertical") == -1) && (tmr_gamePad <= 0))) {
+		    tmr_gamePad = 100;
 			return 3;
 		} else if((Input.GetKeyDown(KeyCode.D)) || (Input.GetKeyDown(KeyCode.RightArrow)) 
-			|| (Input.GetAxis("Horizontal") > 0)) {
+		          || ((Input.GetAxis("Horizontal") == 1) && (tmr_gamePad <= 0))) {
+			tmr_gamePad = 100;
 			return 4;
 		} else if (Input.GetKeyDown(KeyCode.Space)) {
 			return 5;
@@ -668,8 +680,9 @@ public class TextController : MonoBehaviour {
 			return 6;
 		} else if (Input.GetKeyDown(KeyCode.R)) { //R key for Resetting the game from the Help Screen
 			return 7;
-		} 
-		else 
+		} else 
 			return 0;
+		/*} else 
+			return 0;*/
 	}
 }
